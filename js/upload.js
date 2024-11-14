@@ -1,13 +1,11 @@
 // upload.js
 
-// Get form and status elements
 const form = document.getElementById('uploadForm');
 const status = document.getElementById('status');
 
-// Add event listener to the form submission
 form.addEventListener('submit', async (event) => {
-  event.preventDefault();  // Prevent the default form submission
-  
+  event.preventDefault();
+
   const fileInput = document.getElementById('file');
   const file = fileInput.files[0];
   
@@ -16,14 +14,18 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  const formData = new FormData();
-  formData.append('file', file);
+  // Convert the file to Base64
+  const base64File = await toBase64(file);
 
   try {
-    // Send the file using fetch
-    const response = await fetch('/upload', {
+    // Make the POST request to API Gateway
+    const response = await fetch('https://0rqtn45rt1.execute-api.us-east-1.amazonaws.com/test' {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/json',
+        'file-name': file.name // Pass the file name as a header
+      },
+      body: JSON.stringify({ fileContent: base64File.split(',')[1] })
     });
 
     if (response.ok) {
@@ -35,4 +37,14 @@ form.addEventListener('submit', async (event) => {
     console.error('Error:', error);
     status.textContent = 'An error occurred during the upload.';
   }
-});                  
+});
+
+// Helper function to convert file to Base64
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
