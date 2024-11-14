@@ -19,7 +19,7 @@ form.addEventListener('submit', async (event) => {
 
   try {
     // Make the POST request to API Gateway
-    const response = await fetch('https://5t4decxn0a.execute-api.us-east-1.amazonaws.com/stage' {
+    const response = await fetch('https://2of0p6acoe.execute-api.us-east-1.amazonaws.com/upload' {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
